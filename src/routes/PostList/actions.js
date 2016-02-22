@@ -6,6 +6,17 @@ import {
 
 import http from '../../utils/HttpClient';
 
+// Caching logic
+export function shouldFetchPosts(state) {
+  if (state.posts.data.length != 0) {
+    return false;
+  } else if (state.posts.isLoading) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 export function loadPosts() {
   return {
     // Types of actions to emit before and after

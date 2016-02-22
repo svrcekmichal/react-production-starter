@@ -5,6 +5,22 @@ import {
 } from '../../constants';
 import http from '../../utils/HttpClient';
 
+export function invalidate() {
+  return {
+    type: INVALIDATE_POST,
+  };
+}
+
+export function shouldFetchPost(slug,state) {
+  if (state.currentPost.isLoading) {
+    return false;
+  } else if(state.currentPost.didInvalidate) {
+    return true;
+  } else {
+    return state.currentPost.data && state.currentPost.data.slug != slug;
+  }
+}
+
 export function loadPost(slug) {
   return {
     // Types of actions to emit before and after

@@ -1,15 +1,13 @@
-import { provideHooks } from 'redial';
+import asyncResolve from 'reasync';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { loadPost } from '../actions';
+import { shouldFetchPost,loadPost } from '../actions';
 import PrimaryText from '../../../components/PrimaryText';
 import { StyleSheet, css } from 'aphrodite';
 import { layout } from '../../../constants';
 import Helmet from 'react-helmet';
 
-const redial = {
-  fetch: ({ dispatch, params: { slug } }) => dispatch(loadPost(slug)),
-};
+const defer = ({ getState,dispatch, params: { slug } }) => shouldFetchPost(slug,getState()) ? dispatch(loadPost(slug)) : undefined;
 
 const mapStateToProps = state => ({
   title: state.currentPost.data.title,
@@ -54,4 +52,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default provideHooks(redial)(connect(mapStateToProps)(PostPage));
+export default asyncResolve(undefined,defer)(connect(mapStateToProps)(PostPage));
