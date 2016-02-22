@@ -1,13 +1,11 @@
-import { provideHooks } from 'redial';
+import asyncResolve from 'reasync';
 import React, { PropTypes } from 'react';
-import { loadPosts } from './actions';
+import { shouldFetchPosts,loadPosts } from './actions';
 import { connect } from 'react-redux';
 import PostListItem from './components/PostListItem';
 import { StyleSheet, css } from 'aphrodite';
 
-const redial = {
-  fetch: ({ dispatch }) => dispatch(loadPosts()),
-};
+const defer = ({ getState,dispatch }) => shouldFetchPosts(getState()) ? dispatch(loadPosts()) : undefined;
 
 const mapStateToProps = (state) => ({
   posts: state.posts.data,
@@ -32,4 +30,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default provideHooks(redial)(connect(mapStateToProps)(PostListPage));
+export default asyncResolve(undefined,defer)(connect(mapStateToProps)(PostListPage));

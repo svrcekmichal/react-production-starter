@@ -247,7 +247,6 @@ server.get('*', (req, res) => {
   const store = configureStore();
   const routes = createRoutes(store);
   const history = createMemoryHistory(req.path);
-  const { dispatch } = store;
   match({ routes, history }, (err, redirectLocation, renderProps) => {
     if (err) {
       console.error(err);
@@ -257,35 +256,25 @@ server.get('*', (req, res) => {
     if (!renderProps)
       return res.status(404).send('Not found');
 
-    const { components } = renderProps;
+    function render() {
+      const initialState = store.getState();
+      const InitialView = (
+        <Provider store={store}>
+          <RouterContext {...renderProps} />
+        </Provider>
+      );
 
-    // Define locals to be provided to all lifecycle hooks:
-    const locals = {
-     path: renderProps.location.pathname,
-     query: renderProps.location.query,
-     params: renderProps.params,
+      // just call html = ReactDOM.renderToString(InitialView)
+      // to if you don't want Aphrodite. Also change renderFullPage
+      // accordingly
+      const data = StyleSheetServer.renderStatic(
+        () => ReactDOM.renderToString(InitialView)
+      );
+      res.status(200).send(renderFullPage(data, initialState));
+    }
 
-     // Allow lifecycle hooks to dispatch Redux actions:
-     dispatch,
-   };
-
-    trigger('fetch', components, locals)
-      .then(() => {
-        const initialState = store.getState();
-        const InitialView = (
-          <Provider store={store}>
-            <RouterContext {...renderProps} />
-          </Provider>
-        );
-
-        // just call html = ReactDOM.renderToString(InitialView)
-        // to if you don't want Aphrodite. Also change renderFullPage
-        // accordingly
-        const data = StyleSheetServer.renderStatic(
-            () => ReactDOM.renderToString(InitialView)
-        );
-        res.status(200).send(renderFullPage(data, initialState));
-      })
+    resolveOnServer(renderProps,store)
+      .then(render)
       .catch(e => console.log(e));
   });
 });
