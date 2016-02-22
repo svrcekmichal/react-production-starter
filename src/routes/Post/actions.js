@@ -12,11 +12,13 @@ export function invalidate() {
   };
 }
 
-function shouldFetchPost(state) {
+export function shouldFetchPost(slug,state) {
   if (state.currentPost.isLoading) {
     return false;
+  } else if(state.currentPost.didInvalidate) {
+    return true;
   } else {
-    return state.currentPost.didInvalidate;
+    return state.currentPost.data && state.currentPost.data.slug != slug;
   }
 }
 

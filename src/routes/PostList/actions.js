@@ -7,9 +7,9 @@ import {
 import http from '../../utils/HttpClient';
 
 // Caching logic
-function shouldFetchPosts(state) {
-  if (state.posts.data === null) {
-    return true;
+export function shouldFetchPosts(state) {
+  if (state.posts.data.length != 0) {
+    return false;
   } else if (state.posts.isLoading) {
     return false;
   } else {

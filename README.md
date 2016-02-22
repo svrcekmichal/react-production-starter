@@ -1,4 +1,9 @@
-# React Production Starter
+# Attention
+
+**This is fork of `jaredpalmer/react-production-starter`,
+where I wanted to try to switch `markdalgleish/redial` package to my package `reasync`**
+
+## React Production Starter
 
 This is an example react application (master-detail feed) with isomorphic rendering, async react-router routes, async redux reducers, async data fetching, and code-splitting.
 
