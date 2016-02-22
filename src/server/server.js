@@ -16,7 +16,7 @@ import { createMemoryHistory, RouterContext, match } from 'react-router';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import { trigger } from 'redial';
+import { resolveOnServer } from 'reasync';
 import { callAPIMiddleware } from '../middleware/callAPIMiddleware';
 import { StyleSheetServer } from 'aphrodite';
 import { configureStore } from '../store';
