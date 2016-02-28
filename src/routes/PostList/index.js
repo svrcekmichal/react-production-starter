@@ -1,4 +1,4 @@
-import asyncResolve from 'reasync';
+import {deferResolve} from 'reasync';
 import React, { PropTypes } from 'react';
 import { shouldFetchPosts,loadPosts } from './actions';
 import { connect } from 'react-redux';
@@ -30,4 +30,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default asyncResolve(undefined,defer)(connect(mapStateToProps)(PostListPage));
+export default deferResolve(defer)(connect(mapStateToProps)(PostListPage));
